@@ -13,13 +13,14 @@ DISTRIBUTABLES += $(wildcard LICENSE*)
 include $(RACK_DIR)/arch.mk
 
 DUKTAPE ?= 0
-QUICKJS ?= 1
+QUICKJS ?= 0
 LUAJIT ?= 1
 PYTHON ?= 0
-SUPERCOLLIDER ?= 1
-VULT ?= 1
-LIBPD ?= 1
-FAUST ?= 1
+SUPERCOLLIDER ?= 0
+VULT ?= 0
+LIBPD ?= 0
+FAUST ?= 0
+JULIA := 1
 
 # Vult depends on both LuaJIT and QuickJS
 ifeq ($(VULT), 1)
@@ -264,4 +265,22 @@ $(libfaust):
 
 endif
 
+
+
+SOURCES += src/JuliaEngine.cpp
+julia_dir := $(JULIA_DIR)
+julia_bin := $(julia_dir)/bin/julia.exe
+FLAGS += -I$(julia_dir)/include/julia -Wl,-rpath,$(JULIA_DIR)/lib
+LDFLAGS += -L'$(julia_dir)\lib' -Wl -l:libjulia.dll.a -l:libopenlibm.dll.a
+
+$(libjulia):
+	mkdir dep/lib/julia
+	cp $(julia_dir)/lib/* dep/lib/julia
+
 include $(RACK_DIR)/plugin.mk
+
+
+#$(info flags = $(FLAGS))
+#$(info ldflags = $(LDFLAGS))
+#$(info ldlibs = $(LDLIBS))
+#$(info cflags = $(CFLAGS))

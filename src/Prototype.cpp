@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 #include <thread>
+#include <locale>
+#include <codecvt>
 #include <mutex>
 #include "ScriptEngine.hpp"
 #include <efsw/efsw.h>
@@ -504,7 +506,7 @@ struct Prototype : Module {
 		(void) std::system(command.c_str());
 #elif defined ARCH_WIN
 		std::string command = editorPath + " \"" + path + "\"";
-		std::wstring commandW = string::toWstring(command);
+		std::wstring commandW = rack::string::UTF8toUTF16(command);
 		STARTUPINFOW startupInfo;
 		std::memset(&startupInfo, 0, sizeof(startupInfo));
 		startupInfo.cb = sizeof(startupInfo);
